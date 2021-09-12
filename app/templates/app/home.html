@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+
+{% load static %}
+{% block title %}Quiz{% endblock title %}
+{% block additionalStyles %}
+<link rel="stylesheet" href="{% static 'app/css/quiz.css' %}">
+{% endblock %}
+{% block content %}
+<div class="main mt-3">
+    <div class="card  mb-3 " style="max-width: 18rem;">
+        <div class="card-header text-white  bg-primary">Check Knowledge</div>
+        <div class="card-body text-black">
+            <!-- <h5 class="card-title">Primary card title</h5>
+            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's
+                content.</p> -->
+            <div class="usr">
+                <h5>
+                    <strong>{{user}}</strong>
+                    <strong>Points : {{points}}</strong>
+                </h5>
+            </div>
+            {% if messages %}
+            <div id="msg">
+                <ul class="messages">
+                    {% for message in messages %}
+                    <li{% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
+                        {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+            <div class="ques">
+                {% if points.passed is False %}
+
+                <form method="POST"> {% csrf_token %}
+                    {% for q in questions %}
+                    <h6><strong>{{q}}</strong></h6>
+                    <div id="ans{{q.id}}" onclick="section('ans{{q.id}}')">
+                        {% for ans in q.get_answers %}
+                        <label>
+                            <input type="checkbox" name="answer" value="{{ans.id}}">
+                            <span style="font-size: 14px;">{{ans}}</span>
+                        </label>
+                        <br>
+                        {% endfor %}
+                    </div>
+                    <hr>
+
+                    {% endfor %}
+
+                    <button type="submit" class="btn btn-primary ">Check the quiz to earn
+                        {{points.points_to_give}} points</button>
+                    <br>
+                    <p class="mt-2"><small> The second attempt will earn a total of 50 points and any further attempts
+                            will earn a total of 25 points.</small></p>
+                </form>
+                {% else %}
+                <h4 class="else text-success">Congrats! You passed the quiz with {{points}} points in {{points.attempt}}
+                    attempts</h4>
+
+                {% endif %}
+
+            </div>
+        </div>
+    </div>
+
+</div>
+<script src="{% static 'app/js/quiz.js' %}"></script>
+
+{% endblock content %}
