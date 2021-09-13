@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 class Point(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     points = models.PositiveIntegerField(default=0)
-    attempt = models.PositiveIntegerField(default=0)
+    attempt = models.PositiveIntegerField(default=1)
     passed = models.BooleanField(default=False)
 
     def __str__(self):
@@ -13,9 +13,9 @@ class Point(models.Model):
 
     # check the point to asign user according to attemps
     def points_to_give(self):
-        if self.attempt is 0:
+        if self.attempt is 1:
             return 100
-        elif self.attempt <= 1:
+        elif self.attempt is 2:
             return 50
         else:
             return 25
